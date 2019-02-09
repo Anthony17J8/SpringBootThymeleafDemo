@@ -1,10 +1,12 @@
 package ru.icoltd.springboot.thymeleafdemo.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import ru.icoltd.springboot.thymeleafdemo.model.Employee;
+import ru.icoltd.springboot.thymeleafdemo.entity.Employee;
+import ru.icoltd.springboot.thymeleafdemo.service.EmployeeService;
 
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
@@ -14,32 +16,21 @@ import java.util.List;
 @RequestMapping("/employees")
 public class EmployeeController {
 
-    // load employee data
-    private List<Employee> theEmployees;
+    private EmployeeService employeeService;
 
-    @PostConstruct
-    private void loadData() {
-
-        // create employees
-        Employee emp1 = new Employee(1, "Lesley", "Snejder", "snejder@gmail.com");
-        Employee emp2 = new Employee(2, "Paolo", "Maldini", "paolo@gmail.com");
-        Employee emp3 = new Employee(3, "Rui", "Costa", "costa@gmail.com");
-
-        // create the list
-        theEmployees = new ArrayList<>();
-
-        // add to the list
-        theEmployees.add(emp1);
-        theEmployees.add(emp2);
-        theEmployees.add(emp3);
-
+    @Autowired
+    public EmployeeController(EmployeeService employeeService) {
+        this.employeeService = employeeService;
     }
 
     // add mapping for '/list'
     @GetMapping("/list")
     public String listEmployees(Model model) {
 
-        // add to the model
+        // get employees from db
+        List<Employee> theEmployees = employeeService.findAll();
+
+        // add to the entity
         model.addAttribute("employees", theEmployees);
 
         return "list-employees";
