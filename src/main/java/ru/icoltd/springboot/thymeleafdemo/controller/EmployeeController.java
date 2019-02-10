@@ -30,7 +30,7 @@ public class EmployeeController {
         // add to the entity
         model.addAttribute("employees", theEmployees);
 
-        return "employees/list-employees";
+        return "/employees/list-employees";
     }
 
     @GetMapping("/showFormForAdd")
@@ -40,7 +40,7 @@ public class EmployeeController {
         Employee employee = new Employee();
 
         theModel.addAttribute("employee", employee);
-        return "employees/employee-form";
+        return "/employees/employee-form";
     }
 
     @PostMapping("/save")
@@ -63,6 +63,16 @@ public class EmployeeController {
         theModel.addAttribute("employee", theEmployee);
 
         // send over to our form
-        return "employees/employee-form";
+        return "/employees/employee-form";
+    }
+
+    @GetMapping("/delete")
+    public String delete(@RequestParam("employeeId") int theId) {
+
+        // delete the employee
+        employeeService.deleteById(theId);
+
+        // redirect to /employees/list
+        return "redirect:/employees/list";
     }
 }
